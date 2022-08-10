@@ -1,0 +1,36 @@
+stages:
+  - package
+  - test
+  # - docker
+  # - deploy
+
+.maven:
+  image: maven:3.8.4-openjdk-11-slim
+  cache:
+    key: maven-$CI_COMMIT_REF_SLUG
+    paths:
+      - .m2
+    policy: pull-push
+  variables:
+    MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository/ -XX:+TieredCompilation -XX:TieredStopAtLevel=1 -Djansi.force=true"
+    MAVEN_CLI_OPTS: "--errors --show-version -Dstyle.color=always"
+  
+maven-package:
+  stage: package
+  extends: .maven
+  script:
+    - mvn $MAVEN_CLI_OPTS package -DskipTests
+    - rm -rf target/*.original
+  artifacts:
+    paths:
+      - target/
+    expire_in: 7 days
+
+maven-verify:
+  stage: test
+  extends: .maven
+  dependencies: [maven-package]
+  script:
+    - mvn $MAVEN_CLI_OPTS verify -Dmaven.main.skip org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=JeromeCheviet_poseidon -Dsonar.organization=jeromecheviet -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_TOKEN
+    - awk -F"," '{ lines += $8 + $9; covered += $9 } END { print covered, "/", lines, "lines covered"; print 100*covered/lines, "% covered" }' target/site/jacoco/jacoco.csv || echo "0.0 % covered"
+  coverage: '/\d+.*\d+ \% covered/'
