@@ -1,11 +1,14 @@
 package com.poseidon.poseidon.domain;
 
-import javax.persistence.*;
-// import javax.validation.constraints.NotBlank;
+import org.hibernate.annotations.DynamicUpdate;
 
-/*@Entity
-@Table(name = "users")*/
-public class User {/*
+import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+
+@Entity
+@DynamicUpdate
+@Table(name = "users")
+public class User {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Integer id;
@@ -56,5 +59,5 @@ public class User {/*
 
     public void setRole(String role) {
         this.role = role;
-    }*/
+    }
 }
