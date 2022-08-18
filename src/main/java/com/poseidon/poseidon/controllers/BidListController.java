@@ -1,6 +1,8 @@
 package com.poseidon.poseidon.controllers;
 
 import com.poseidon.poseidon.domain.BidList;
+import com.poseidon.poseidon.service.BidListService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -9,17 +11,22 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-//import javax.validation.Valid;
+import javax.validation.Valid;
 
 
 @Controller
 public class BidListController {
-    // TODO: Inject Bid service
 
-  /*  @RequestMapping("/bidList/list")
-    public String home(Model model)
-    {
-        // TODO: call service find all bids to show to the view
+
+    @Autowired
+    private BidListService bidListService;
+
+    @RequestMapping("/bidList/list")
+    public String home(Model model) {
+        Iterable<BidList> bidLists = bidListService.getBidLists();
+
+        model.addAttribute("bidLists", bidLists);
+
         return "bidList/list";
     }
 
@@ -42,7 +49,7 @@ public class BidListController {
 
     @PostMapping("/bidList/update/{id}")
     public String updateBid(@PathVariable("id") Integer id, @Valid BidList bidList,
-                             BindingResult result, Model model) {
+                            BindingResult result, Model model) {
         // TODO: check required fields, if valid call service to update Bid and return list Bid
         return "redirect:/bidList/list";
     }
@@ -51,5 +58,5 @@ public class BidListController {
     public String deleteBid(@PathVariable("id") Integer id, Model model) {
         // TODO: Find Bid by Id and delete the bid, return to Bid list
         return "redirect:/bidList/list";
-    }*/
+    }
 }
