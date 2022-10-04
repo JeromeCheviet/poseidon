@@ -11,7 +11,7 @@ import java.time.LocalDate;
 
 @Entity
 @DynamicUpdate
-@Table(name = "Trade")
+@Table(name = "trade")
 public class Trade {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
