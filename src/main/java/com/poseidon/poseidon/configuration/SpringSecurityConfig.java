@@ -37,6 +37,8 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .formLogin().successForwardUrl("/bidList/list").failureUrl("/login?error=true").permitAll()
                 .and()
+                .oauth2Login().defaultSuccessUrl("/bidList/list").permitAll()
+                .and()
                 .logout().logoutUrl("/logout").logoutSuccessUrl("/home");
     }
 
