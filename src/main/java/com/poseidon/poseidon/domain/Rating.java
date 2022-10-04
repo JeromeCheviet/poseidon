@@ -9,7 +9,7 @@ import java.sql.Timestamp;
 
 @Entity
 @DynamicUpdate
-@Table(name = "Rating")
+@Table(name = "rating")
 public class Rating {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

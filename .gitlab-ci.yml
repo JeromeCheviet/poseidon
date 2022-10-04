@@ -25,6 +25,13 @@ maven-package:
     paths:
       - target/
     expire_in: 7 days
+  except:
+    changes:
+      - ".gitlab-ci.yml"
+      - ".gitignore"
+      - "docker-compose.yml"
+      - "*.md"
+      - "doc/*"
 
 maven-verify:
   stage: test
@@ -34,3 +41,10 @@ maven-verify:
     - mvn $MAVEN_CLI_OPTS verify -Dmaven.main.skip org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=JeromeCheviet_poseidon -Dsonar.organization=jeromecheviet -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_TOKEN
     - awk -F"," '{ lines += $8 + $9; covered += $9 } END { print covered, "/", lines, "lines covered"; print 100*covered/lines, "% covered" }' target/site/jacoco/jacoco.csv || echo "0.0 % covered"
   coverage: '/\d+.*\d+ \% covered/'
+  except:
+    changes:
+      - ".gitlab-ci.yml"
+      - ".gitignore"
+      - "docker-compose.yml"
+      - "*.md"
+      - "doc/*"

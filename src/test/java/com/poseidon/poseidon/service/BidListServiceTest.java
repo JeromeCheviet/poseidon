@@ -12,6 +12,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
@@ -57,7 +58,7 @@ class BidListServiceTest {
         expectedBidList.setBidListId(expectedBidListId);
         expectedBidList.setAccount(expectedAccount);
         expectedBidList.setType(expectedType);
-        expectedBidList.setBibQuantity(expectedBidQuantity);
+        expectedBidList.setBidQuantity(expectedBidQuantity);
         expectedBidList.setAskQuantity(expectedAskQuantity);
         expectedBidList.setBid(expectedBid);
         expectedBidList.setAsk(expectedAsk);
@@ -91,5 +92,46 @@ class BidListServiceTest {
         assertEquals(expectedBidLists, actualBidList);
         verify(bidListRepository, times(1)).findAll();
 
+    }
+
+    @Test
+    void testGetBidListById() {
+        when(bidListRepository.findById(1)).thenReturn(Optional.ofNullable(expectedBidList));
+
+        Optional<BidList> actualBidList = bidListService.getBidlistById(1);
+
+        assertEquals(expectedBidList, actualBidList.get());
+        verify(bidListRepository, times(1)).findById(1);
+    }
+
+    @Test
+    void testAddBidList() {
+        when(bidListRepository.save(any(BidList.class))).thenReturn(expectedBidList);
+
+        bidListService.addBidList(expectedBidList);
+
+        verify(bidListRepository, times(1)).save(expectedBidList);
+    }
+
+    @Test
+    void testUpdateBidList() {
+        expectedBidList.setAccount("updated account");
+        int actualBidListId = 1;
+        when(bidListRepository.save(expectedBidList)).thenReturn(expectedBidList);
+
+        bidListService.updateBidList(actualBidListId, expectedBidList);
+
+        assertEquals("updated account", expectedBidList.getAccount());
+        assertEquals(actualBidListId, expectedBidList.getBidListId());
+        verify(bidListRepository, times(1)).save(expectedBidList);
+    }
+
+    @Test
+    void testDeleteBidList() {
+        doNothing().when(bidListRepository).delete(expectedBidList);
+
+        bidListService.deleteBidList(expectedBidList);
+
+        verify(bidListRepository, times(1)).delete(expectedBidList);
     }
 }

@@ -12,14 +12,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-// import javax.validation.Valid;
+import javax.validation.Valid;
 
 @Controller
 public class UserController {
-    //@Autowired
-    //private UserRepository userRepository;
+    @Autowired
+    private UserRepository userRepository;
 
-/*    @RequestMapping("/user/list")
+    @RequestMapping("/user/list")
     public String home(Model model)
     {
         model.addAttribute("users", userRepository.findAll());
@@ -72,5 +72,5 @@ public class UserController {
         userRepository.delete(user);
         model.addAttribute("users", userRepository.findAll());
         return "redirect:/user/list";
-    }*/
+    }
 }

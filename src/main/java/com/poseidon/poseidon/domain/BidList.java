@@ -1,7 +1,8 @@
 package com.poseidon.poseidon.domain;
 
 import javax.persistence.*;
-import javax.validation.constraints.Digits;
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
@@ -9,7 +10,7 @@ import java.time.LocalDate;
  * Class use to connect data of table BidList into an object
  */
 @Entity
-@Table(name = "Bidlist")
+@Table(name = "bidlist")
 public class BidList {
 
     @Id
@@ -17,16 +18,18 @@ public class BidList {
     @Column(name = "BidListId")
     private int bidListId;
 
-    @NotNull
+    @NotBlank(message = "Account is mandatory")
     @Column(name = "account")
     private String account;
 
-    @NotNull
+    @NotBlank(message = "Type is mandatory")
     @Column(name = "type")
     private String type;
 
+    @NotNull(message = "Bid Quantity is mandatory")
+    @DecimalMin(value = "0", inclusive = false, message = "Bid quantity must be positive")
     @Column(name = "bidQuantity")
-    private double bibQuantity;
+    private double bidQuantity;
 
     @Column(name = "askQuantity")
     private double askQuantity;
@@ -106,12 +109,12 @@ public class BidList {
         this.type = type;
     }
 
-    public double getBibQuantity() {
-        return bibQuantity;
+    public double getBidQuantity() {
+        return bidQuantity;
     }
 
-    public void setBibQuantity(double bibQuantity) {
-        this.bibQuantity = bibQuantity;
+    public void setBidQuantity(double bidQuantity) {
+        this.bidQuantity = bidQuantity;
     }
 
     public double getAskQuantity() {

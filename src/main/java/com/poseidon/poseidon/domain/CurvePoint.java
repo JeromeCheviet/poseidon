@@ -13,7 +13,7 @@ import java.time.LocalDate;
 
 @Entity
 @DynamicUpdate
-@Table(name = "CurvePoint")
+@Table(name = "curvepoint")
 public class CurvePoint {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
