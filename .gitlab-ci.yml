@@ -38,7 +38,7 @@ maven-verify:
   extends: .maven
   dependencies: [maven-package]
   script:
-    - mvn $MAVEN_CLI_OPTS verify -Dmaven.main.skip org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=JeromeCheviet_poseidon -Dsonar.organization=jeromecheviet -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_TOKEN
+    - mvn $MAVEN_CLI_OPTS verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=JeromeCheviet_poseidon -Dsonar.organization=jeromecheviet -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_TOKEN
     - awk -F"," '{ lines += $8 + $9; covered += $9 } END { print covered, "/", lines, "lines covered"; print 100*covered/lines, "% covered" }' target/site/jacoco/jacoco.csv || echo "0.0 % covered"
   coverage: '/\d+.*\d+ \% covered/'
   except:
