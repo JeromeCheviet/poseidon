@@ -39,17 +39,15 @@ Build-JAR:
   image: maven:3.8.4-openjdk-11-slim
   dependencies :
     - Test-code
-  extends: .ignore
+  #extends: .ignore
   script:
     - mvn ${MVN_OPTS} -Drevision=x.y.z-SUFFIX -Dskiptests -B clean install
   artifacts:
     paths:
       - target/*.jar
     expire_in: 7 days
-  only:
-    - dev
-    - main
-    - merge_requests
+  rules:
+    - if: $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME == "dev" || $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME == "main"
   tags:
     - docker
 
