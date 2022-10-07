@@ -49,6 +49,7 @@ Build-JAR:
   only:
     - dev
     - main
+    - merge_requests
   tags:
     - docker
 
