@@ -92,6 +92,7 @@ public class BidListController {
 
     @GetMapping("/bidList/delete/{id}")
     public String deleteBid(@PathVariable("id") Integer id, Model model) {
+        logger.debug("Access /bidList/delete/{} page", id);
         Optional<BidList> bidList = bidListService.getBidlistById(id);
 
         if (bidList.isPresent()) {

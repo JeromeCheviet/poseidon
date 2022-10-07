@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+>
+<head>
+    <meta charset="utf-8"/>
+    <title>login</title>
+    <link rel="stylesheet" href="../../css/bootstrap.min.css">
+</head>
+<body>
+
+<div class="container">
+    <div class="row">
+        <h2>Login with Username and Password</h2>
+    </div>
+    <div class="row">
+        <form th:action="@{/login}" method="post"></form>
+        <div class="form-group">
+            <div class="row">
+                <label for="user">User:</label>
+                <input type="text" name="user" id="user" placeholder="Username">
+            </div>
+            <div class="row">
+                <label for="password">Password:</label>
+                <input type="password" name="password" id="password" placeholder="Password">
+            </div>
+            <div class="row">
+                <button name="Submit" value="Login" type="submit" th:text="Login">Login</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>

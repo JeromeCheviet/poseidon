@@ -31,15 +31,15 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
         logger.debug("HTTP security");
         http.csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/", "/home", "/user/list", "/user/add", "/css/**").permitAll()
-                //.antMatchers("/user").hasAuthority("ADMIN")
+                .antMatchers("/", "/home", "/user/list", "/css/**").permitAll()
+                .antMatchers("/user/add", "/user/validate").hasAuthority("ADMIN")
                 .anyRequest().authenticated()
                 .and()
-                .formLogin().successForwardUrl("/bidList/list").failureUrl("/login?error=true").permitAll()
+                .formLogin().successForwardUrl("/bidList/list").permitAll()
                 .and()
                 .oauth2Login().defaultSuccessUrl("/bidList/list").permitAll()
                 .and()
-                .logout().logoutUrl("/logout").logoutSuccessUrl("/home");
+                .logout().logoutUrl("/app-logout").logoutSuccessUrl("/");
     }
 
     @Override
