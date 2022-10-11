@@ -76,13 +76,6 @@ public class BidListController {
             return "bidList/update";
         }
 
-/*        Optional<BidList> existingBid = bidListService.getBidlistById(id);
-
-        if (existingBid.isEmpty()) {
-            logger.info("No existing bid with id {} has been found !", id);
-            return "bidList/update";
-        }*/
-
         bidListService.updateBidList(id, bidList);
         logger.info("Bid with id {} have been updated", id);
         model.addAttribute("bidlists", bidListService.getBidLists());
