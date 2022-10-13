@@ -31,12 +31,15 @@ public class BidList {
     @Column(name = "bidQuantity")
     private double bidQuantity;
 
+    @DecimalMin(value = "0", inclusive = false, message = "Bid quantity must be positive")
     @Column(name = "askQuantity")
     private double askQuantity;
 
+    @DecimalMin(value = "0", inclusive = false, message = "Bid must be positive")
     @Column(name = "bid")
     private double bid;
 
+    @DecimalMin(value = "0", inclusive = false, message = "Ask must be positive")
     @Column(name = "ask")
     private double ask;
 

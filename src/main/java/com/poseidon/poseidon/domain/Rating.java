@@ -3,9 +3,7 @@ package com.poseidon.poseidon.domain;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
-/*import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;*/
-import java.sql.Timestamp;
+import javax.validation.constraints.DecimalMin;
 
 @Entity
 @DynamicUpdate
@@ -25,6 +23,7 @@ public class Rating {
     @Column(name = "fitchRating")
     private String fitchRating;
 
+    @DecimalMin(value = "0", inclusive = false, message = "Order number must be positive")
     @Column(name = "orderNumber")
     private int orderNumber;
 
