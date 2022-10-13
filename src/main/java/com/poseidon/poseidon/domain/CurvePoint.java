@@ -5,6 +5,7 @@ package com.poseidon.poseidon.domain;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
+import javax.validation.constraints.DecimalMin;
 // import javax.validation.constraints.NotBlank;
 // import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
@@ -20,15 +21,18 @@ public class CurvePoint {
     @Column(name = "Id")
     private int id;
 
+    @DecimalMin(value = "0", inclusive = false, message = "Curve ID must be positive")
     @Column(name = "CurveId")
     private int curveId;
 
     @Column(name = "asOfDate")
     private LocalDate asOfDate;
 
+    @DecimalMin(value = "0", inclusive = false, message = "Term must be positive")
     @Column(name = "term")
     private double term;
 
+    @DecimalMin(value = "0", inclusive = false, message = "Value must be positive")
     @Column(name = "value")
     private double value;
 

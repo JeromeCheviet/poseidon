@@ -3,6 +3,7 @@ package com.poseidon.poseidon.domain;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
+import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotNull;
 // import javax.validation.constraints.NotBlank;
 import java.sql.Timestamp;
@@ -26,15 +27,19 @@ public class Trade {
     @Column(name = "type")
     private String type;
 
+    @DecimalMin(value = "0", inclusive = false, message = "Buy quantity must be positive")
     @Column(name = "buyQuantity")
     private double buyQuantity;
 
+    @DecimalMin(value = "0", inclusive = false, message = "Sell quantity must be positive")
     @Column(name = "sellQuantity")
     private double sellQuantity;
 
+    @DecimalMin(value = "0", inclusive = false, message = "Buy price must be positive")
     @Column(name = "buyPrice")
     private double buyPrice;
 
+    @DecimalMin(value = "0", inclusive = false, message = "Sell price must be positive")
     @Column(name = "sellPrice")
     private double sellPrice;
 
