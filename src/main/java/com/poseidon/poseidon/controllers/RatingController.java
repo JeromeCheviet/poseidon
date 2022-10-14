@@ -90,6 +90,7 @@ public class RatingController {
 
         if (rating.isPresent()) {
             ratingService.deleteRating(rating.get());
+            logger.info("Rating with id {} has been deleted.", id);
         }
 
         model.addAttribute("ratings", ratingService.getRatingList());
