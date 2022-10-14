@@ -77,7 +77,7 @@ public class BidListController {
         }
 
         bidListService.updateBidList(id, bidList);
-        logger.info("Bid with id {} have been updated", id);
+        logger.info("Bid with id {} has been updated", id);
         model.addAttribute("bidlists", bidListService.getBidLists());
 
         return "redirect:/bidList/list";
@@ -90,6 +90,7 @@ public class BidListController {
 
         if (bidList.isPresent()) {
             bidListService.deleteBidList(bidList.get());
+            logger.info("Bid list with id {} has been deleted.", id);
         }
 
         model.addAttribute("bidLists", bidListService.getBidLists());

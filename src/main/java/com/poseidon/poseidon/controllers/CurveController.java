@@ -91,6 +91,7 @@ public class CurveController {
 
         if (curvePoint.isPresent()) {
             curvePointService.deleteCurvePoint(curvePoint.get());
+            logger.info("Curve point with id {} has been deleted.", id);
         }
 
         model.addAttribute("curvePoints", curvePointService.getCurvePointLists());
