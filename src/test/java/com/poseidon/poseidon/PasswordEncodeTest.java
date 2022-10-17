@@ -6,6 +6,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+
 /**
  * Created by Khang Nguyen.
  * Email: khang.nguyen@banvien.com
@@ -19,6 +21,9 @@ public class PasswordEncodeTest {
     public void testPassword() {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         String pw = encoder.encode("123456");
-        System.out.println("[ "+ pw + " ]");
+
+        assertNotEquals("123456", pw);
+        assertNotEquals("", pw);
+        assertNotEquals(null, pw);
     }
 }

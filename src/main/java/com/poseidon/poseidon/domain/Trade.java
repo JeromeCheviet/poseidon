@@ -4,6 +4,7 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 // import javax.validation.constraints.NotBlank;
 import java.sql.Timestamp;
@@ -19,11 +20,11 @@ public class Trade {
     @Column(name = "TradeId")
     private int tradeId;
 
-    @NotNull
+    @NotBlank(message = "Account is mandatory")
     @Column(name = "account")
     private String account;
 
-    @NotNull
+    @NotBlank(message = "Type is mandatory")
     @Column(name = "type")
     private String type;
 
