@@ -34,7 +34,7 @@ class RatingServiceTest {
         String expectedMoodysRating = "moody";
         String expectedSandRating = "sand";
         String expectedFitchRating = "fitch";
-        int expectedOrderNumber = 10;
+        Integer expectedOrderNumber = 10;
 
         expectedRating = new Rating();
 

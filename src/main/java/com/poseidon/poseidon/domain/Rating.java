@@ -4,6 +4,8 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @DynamicUpdate
@@ -14,18 +16,22 @@ public class Rating {
     @Column(name = "Id")
     private int id;
 
+    @NotBlank(message = "MoodysRating is mandatory")
     @Column(name = "moodysRating")
     private String moodysRating;
 
+    @NotBlank(message = "SandPRating is mandatory")
     @Column(name = "sandPRating")
     private String sandPRating;
 
+    @NotBlank(message = "FitchRating is mandatory")
     @Column(name = "fitchRating")
     private String fitchRating;
 
+    @NotNull(message = "Order is mandatory")
     @DecimalMin(value = "0", inclusive = false, message = "Order number must be positive")
     @Column(name = "orderNumber")
-    private int orderNumber;
+    private Integer orderNumber;
 
     public int getId() {
         return id;
@@ -59,11 +65,11 @@ public class Rating {
         this.fitchRating = fitchRating;
     }
 
-    public int getOrderNumber() {
+    public Integer getOrderNumber() {
         return orderNumber;
     }
 
-    public void setOrderNumber(int orderNumber) {
+    public void setOrderNumber(Integer orderNumber) {
         this.orderNumber = orderNumber;
     }
 }

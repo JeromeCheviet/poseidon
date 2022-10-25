@@ -32,10 +32,10 @@ class CurvePointServiceTest {
     @BeforeEach
     private void setUp() {
         int expectedId = 1;
-        int expectedCurveId = 1;
+        Integer expectedCurveId = 1;
         LocalDate expectedAsOfDate = LocalDate.now();
-        double expectedTerm = 1.0;
-        double expectedValue = 1.5;
+        Double expectedTerm = 1.0;
+        Double expectedValue = 1.5;
         LocalDate expectedCreationDate = LocalDate.now().minusDays(5);
 
         expectedCurvePoint = new CurvePoint();
@@ -91,13 +91,13 @@ class CurvePointServiceTest {
 
     @Test
     void testUpdateCurvePoint() {
-        expectedCurvePoint.setValue(20);
+        expectedCurvePoint.setValue(20.0);
         int actualCurvePointId = 1;
 
         when(curvePointRepository.save(expectedCurvePoint)).thenReturn(expectedCurvePoint);
         curvePointService.updateCurvePoint(actualCurvePointId, expectedCurvePoint);
 
-        assertEquals(20, expectedCurvePoint.getValue());
+        assertEquals(20.0, expectedCurvePoint.getValue());
         assertEquals(actualCurvePointId, expectedCurvePoint.getCurveId());
         verify(curvePointRepository, times(1)).save(expectedCurvePoint);
     }

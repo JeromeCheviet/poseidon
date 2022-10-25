@@ -5,9 +5,6 @@ import org.hibernate.annotations.DynamicUpdate;
 import javax.persistence.*;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-// import javax.validation.constraints.NotBlank;
-import java.sql.Timestamp;
 import java.time.LocalDate;
 
 
@@ -30,19 +27,19 @@ public class Trade {
 
     @DecimalMin(value = "0", inclusive = false, message = "Buy quantity must be positive")
     @Column(name = "buyQuantity")
-    private double buyQuantity;
+    private Double buyQuantity;
 
     @DecimalMin(value = "0", inclusive = false, message = "Sell quantity must be positive")
     @Column(name = "sellQuantity")
-    private double sellQuantity;
+    private Double sellQuantity;
 
     @DecimalMin(value = "0", inclusive = false, message = "Buy price must be positive")
     @Column(name = "buyPrice")
-    private double buyPrice;
+    private Double buyPrice;
 
     @DecimalMin(value = "0", inclusive = false, message = "Sell price must be positive")
     @Column(name = "sellPrice")
-    private double sellPrice;
+    private Double sellPrice;
 
     @Column(name = "tradeDate")
     private LocalDate tradeDate;
@@ -110,35 +107,35 @@ public class Trade {
         this.type = type;
     }
 
-    public double getBuyQuantity() {
+    public Double getBuyQuantity() {
         return buyQuantity;
     }
 
-    public void setBuyQuantity(double buyQuantity) {
+    public void setBuyQuantity(Double buyQuantity) {
         this.buyQuantity = buyQuantity;
     }
 
-    public double getSellQuantity() {
+    public Double getSellQuantity() {
         return sellQuantity;
     }
 
-    public void setSellQuantity(double sellQuantity) {
+    public void setSellQuantity(Double sellQuantity) {
         this.sellQuantity = sellQuantity;
     }
 
-    public double getBuyPrice() {
+    public Double getBuyPrice() {
         return buyPrice;
     }
 
-    public void setBuyPrice(double buyPrice) {
+    public void setBuyPrice(Double buyPrice) {
         this.buyPrice = buyPrice;
     }
 
-    public double getSellPrice() {
+    public Double getSellPrice() {
         return sellPrice;
     }
 
-    public void setSellPrice(double sellPrice) {
+    public void setSellPrice(Double sellPrice) {
         this.sellPrice = sellPrice;
     }
 

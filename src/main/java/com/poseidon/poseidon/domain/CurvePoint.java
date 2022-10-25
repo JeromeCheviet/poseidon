@@ -1,14 +1,9 @@
 package com.poseidon.poseidon.domain;
 
-// import org.hibernate.validator.constraints.Length;
-
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
-import javax.validation.constraints.DecimalMin;
-// import javax.validation.constraints.NotBlank;
-// import javax.validation.constraints.NotNull;
-import java.sql.Timestamp;
+import javax.validation.constraints.*;
 import java.time.LocalDate;
 
 
@@ -21,20 +16,24 @@ public class CurvePoint {
     @Column(name = "Id")
     private int id;
 
-    @DecimalMin(value = "0", inclusive = false, message = "Curve ID must be positive")
+    //@DecimalMin(value = "0", inclusive = false, message = "must not be null")
+    @NotNull(message = "Must not be null")
+    @DecimalMin(value = "0", inclusive = false, message = "CurveId must be positive")
     @Column(name = "CurveId")
-    private int curveId;
+    private Integer curveId;
 
     @Column(name = "asOfDate")
     private LocalDate asOfDate;
 
     @DecimalMin(value = "0", inclusive = false, message = "Term must be positive")
+    @NotNull(message = "Term is mandatory")
     @Column(name = "term")
-    private double term;
+    private Double term;
 
     @DecimalMin(value = "0", inclusive = false, message = "Value must be positive")
+    @NotNull(message = "Value is mandatory")
     @Column(name = "value")
-    private double value;
+    private Double value;
 
     @Column(name = "creationDate")
     private LocalDate creationDate;
@@ -47,11 +46,11 @@ public class CurvePoint {
         this.id = id;
     }
 
-    public int getCurveId() {
+    public Integer getCurveId() {
         return curveId;
     }
 
-    public void setCurveId(int curveId) {
+    public void setCurveId(Integer curveId) {
         this.curveId = curveId;
     }
 
@@ -63,19 +62,19 @@ public class CurvePoint {
         this.asOfDate = asOfDate;
     }
 
-    public double getTerm() {
+    public Double getTerm() {
         return term;
     }
 
-    public void setTerm(double term) {
+    public void setTerm(Double term) {
         this.term = term;
     }
 
-    public double getValue() {
+    public Double getValue() {
         return value;
     }
 
-    public void setValue(double value) {
+    public void setValue(Double value) {
         this.value = value;
     }
 
