@@ -51,7 +51,7 @@ public class CurveController {
         logger.info("new curve added");
         model.addAttribute("curvePoints", curvePointService.getCurvePointLists());
 
-        return "curvePoint/add";
+        return "curvePoint/list";
     }
 
     @GetMapping("/curvePoint/update/{id}")

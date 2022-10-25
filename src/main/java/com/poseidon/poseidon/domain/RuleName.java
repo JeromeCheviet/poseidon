@@ -3,6 +3,7 @@ package com.poseidon.poseidon.domain;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 // import javax.validation.constraints.NotBlank;
 import java.sql.Timestamp;
 
@@ -15,21 +16,27 @@ public class RuleName {
     @Column(name = "Id")
     private int id;
 
+    @NotBlank(message = "Name is mandatory")
     @Column(name = "name")
     private String name;
 
+    @NotBlank(message = "Description is mandatory")
     @Column(name = "description")
     private String description;
 
+    @NotBlank(message = "JSON is mandatory")
     @Column(name = "json")
     private String json;
 
+    @NotBlank(message = "Template is mandatory")
     @Column(name = "template")
     private String template;
 
+    @NotBlank(message = "SQL is mandatory")
     @Column(name = "sqlStr")
     private String sqlStr;
 
+    @NotBlank(message = "SqlPart is mandatory")
     @Column(name = "sqlPart")
     private String sqlPart;
 

@@ -34,10 +34,10 @@ class TradeServiceTest {
         int expectedTradeID = 1;
         String expectedAccount = "account";
         String expectedType = "type";
-        double expectedBuyQuantity = 10;
-        double expectedSellQuantity = 2;
-        double expectedBuyPrice = 3.4;
-        double expectedSellPrice = 4.1;
+        Double expectedBuyQuantity = 10.0;
+        Double expectedSellQuantity = 2.0;
+        Double expectedBuyPrice = 3.4;
+        Double expectedSellPrice = 4.1;
         LocalDate expectTradeDate = LocalDate.now();
         String expectedSecurity = "security";
         String expectedStatus = "status";
