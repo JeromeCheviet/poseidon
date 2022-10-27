@@ -39,7 +39,7 @@ Build-JAR:
   image: maven:3.8.4-openjdk-11-slim
   dependencies :
     - Test-code
-  extends: .ignore
+  #extends: .ignore
   script:
     - mvn ${MVN_OPTS} -Drevision=x.y.z-SUFFIX -DskipTests -B clean install
   artifacts:
