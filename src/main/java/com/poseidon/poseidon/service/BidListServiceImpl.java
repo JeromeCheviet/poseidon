@@ -1,6 +1,8 @@
 package com.poseidon.poseidon.service;
 
 import com.poseidon.poseidon.domain.BidList;
+import com.poseidon.poseidon.exception.BidListNotDeletedException;
+import com.poseidon.poseidon.exception.BidListNotFoundException;
 import com.poseidon.poseidon.repositories.BidListRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -16,7 +18,6 @@ import java.util.Optional;
 public class BidListServiceImpl implements BidListService {
 
     private static final Logger logger = LogManager.getLogger(BidListServiceImpl.class);
-    private static final String regexpSecurity = "[\n\r\t]";
 
     @Autowired
     private BidListRepository bidListRepository;
@@ -30,17 +31,24 @@ public class BidListServiceImpl implements BidListService {
     }
 
     @Override
-    public Optional<BidList> getBidlistById(int bidListId) {
+    public BidList getBidlistById(int bidListId) {
         logger.debug("Get bidlist with id : {}", bidListId);
 
-        return bidListRepository.findById(bidListId);
+        return bidListRepository.findById(bidListId).orElseThrow(
+                () -> new BidListNotFoundException("Bidlist with id " + bidListId + " not found")
+        );
     }
 
     @Override
     public void deleteBidList(BidList bidList) {
-        logger.debug("Delete bidlist {}", bidList.getBidListId());
+        int id = bidList.getBidListId();
+        logger.debug("Delete bidlist {}", id);
 
         bidListRepository.delete(bidList);
+
+        Optional<BidList> deletedBidlist = bidListRepository.findById(id);
+        if (deletedBidlist.isPresent())
+            throw new BidListNotDeletedException("Bidlist with id " + id + " has not been deleted");
     }
 
     @Override

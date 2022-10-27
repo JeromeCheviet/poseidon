@@ -1,6 +1,8 @@
 package com.poseidon.poseidon.service;
 
 import com.poseidon.poseidon.domain.RuleName;
+import com.poseidon.poseidon.exception.RuleNameNotDeletedException;
+import com.poseidon.poseidon.exception.RuleNameNotFoundException;
 import com.poseidon.poseidon.repositories.RuleNameRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -65,19 +67,49 @@ class RuleNameServiceTest {
     void testGetRuleNameById() {
         when(ruleNameRepository.findById(1)).thenReturn(Optional.ofNullable(expectedRuleName));
 
-        Optional<RuleName> actualRuleName = ruleNameService.getRuleNameById(1);
+        RuleName actualRuleName = ruleNameService.getRuleNameById(1);
 
-        assertEquals(expectedRuleName, actualRuleName.get());
+        assertEquals(expectedRuleName, actualRuleName);
         verify(ruleNameRepository, times(1)).findById(1);
+    }
+
+    @Test
+    void testGetRuleNameById_whenEmpty_returnException() {
+        when(ruleNameRepository.findById(100)).thenReturn(Optional.empty());
+
+        Throwable exception = assertThrows(RuleNameNotFoundException.class, () -> {
+            ruleNameService.getRuleNameById(100);
+        });
+
+        assertEquals("Rule name with id 100 not found", exception.getMessage());
+        verify(ruleNameRepository, times(1)).findById(100);
     }
 
     @Test
     void testDeleteRuleName() {
         doNothing().when(ruleNameRepository).delete(expectedRuleName);
+        when(ruleNameRepository.findById(1)).thenReturn(Optional.empty());
 
-        ruleNameService.deleteRuleName(expectedRuleName);
+        assertDoesNotThrow(
+                () -> ruleNameService.deleteRuleName(expectedRuleName)
+        );
 
         verify(ruleNameRepository, times(1)).delete(expectedRuleName);
+        verify(ruleNameRepository, times(1)).findById(1);
+    }
+
+    @Test
+    void testDeleteRuleName_whenRuleNameIsPresent_returnException() {
+        doNothing().when(ruleNameRepository).delete(expectedRuleName);
+        when(ruleNameRepository.findById(1)).thenReturn(Optional.ofNullable(expectedRuleName));
+
+        Throwable exception = assertThrows(RuleNameNotDeletedException.class, () -> {
+            ruleNameService.deleteRuleName(expectedRuleName);
+        });
+
+        assertEquals("Rule name with id 1 has not been deleted", exception.getMessage());
+        verify(ruleNameRepository, times(1)).delete(expectedRuleName);
+        verify(ruleNameRepository, times(1)).findById(1);
     }
 
     @Test

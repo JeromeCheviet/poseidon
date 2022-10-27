@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.validation.Valid;
-import java.util.Optional;
 
 
 @Controller
@@ -43,7 +42,7 @@ public class BidListController {
     @PostMapping("/bidList/validate")
     public String validate(@Valid BidList bid, BindingResult result, Model model) {
         logger.debug("Post validate form to add new bid");
-        if (result.hasErrors()){
+        if (result.hasErrors()) {
             logger.info("Add form not valid !");
             return "bidList/add";
         }
@@ -58,12 +57,15 @@ public class BidListController {
     @GetMapping("/bidList/update/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
         logger.debug("Access /biList/update/{} page.", id);
-        Optional<BidList>bidList = bidListService.getBidlistById(id);
-        if (bidList.isPresent()) {
-            model.addAttribute("bidList", bidList.get());
+
+        BidList bidList = bidListService.getBidlistById(id);
+
+        if (bidList.getBidListId() == id) {
+            model.addAttribute("bidList", bidList);
             return "bidList/update";
         }
-        logger.info("No data found in database for id {}", id);
+
+        model.addAttribute("bidLists", bidListService.getBidLists());
         return "bidList/list";
     }
 
@@ -86,10 +88,10 @@ public class BidListController {
     @GetMapping("/bidList/delete/{id}")
     public String deleteBid(@PathVariable("id") Integer id, Model model) {
         logger.debug("Access /bidList/delete/{} page", id);
-        Optional<BidList> bidList = bidListService.getBidlistById(id);
 
-        if (bidList.isPresent()) {
-            bidListService.deleteBidList(bidList.get());
+        BidList bidList = bidListService.getBidlistById(id);
+        if (bidList.getBidListId() == id) {
+            bidListService.deleteBidList(bidList);
             logger.info("Bid list with id {} has been deleted.", id);
         }
 

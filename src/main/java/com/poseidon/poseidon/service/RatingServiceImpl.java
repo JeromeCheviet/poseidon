@@ -1,6 +1,8 @@
 package com.poseidon.poseidon.service;
 
 import com.poseidon.poseidon.domain.Rating;
+import com.poseidon.poseidon.exception.RatingNotDeletedException;
+import com.poseidon.poseidon.exception.RatingNotFoundException;
 import com.poseidon.poseidon.repositories.RatingRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -26,16 +28,23 @@ public class RatingServiceImpl implements RatingService {
 
     @Override
     public void deleteRating(Rating rating) {
-        logger.debug("Delete rating {}", rating.getId());
+        int id = rating.getId();
+        logger.debug("Delete rating {}", id);
 
         ratingRepository.delete(rating);
+
+        Optional<Rating> deletedRating = ratingRepository.findById(id);
+        if (deletedRating.isPresent())
+            throw new RatingNotDeletedException("Rating with id " + id + " has not been deleted");
     }
 
     @Override
-    public Optional<Rating> getRatingById(int ratingId) {
+    public Rating getRatingById(int ratingId) {
         logger.debug("Get rating with id : {}", ratingId);
 
-        return ratingRepository.findById(ratingId);
+        return ratingRepository.findById(ratingId).orElseThrow(
+                () -> new RatingNotFoundException("Rating with id " + ratingId + " not found")
+        );
     }
 
     @Override

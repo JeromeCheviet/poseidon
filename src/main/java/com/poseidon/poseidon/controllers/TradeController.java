@@ -58,9 +58,9 @@ public class TradeController {
     @GetMapping("/trade/update/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
         logger.debug("Access /trade/update/{} page.", id);
-        Optional<Trade> trade = tradeService.getTradeById(id);
-        if (trade.isPresent()) {
-            model.addAttribute("trade", trade.get());
+        Trade trade = tradeService.getTradeById(id);
+        if (trade.getTradeId() == id) {
+            model.addAttribute("trade", trade);
             return "trade/update";
         }
         logger.info("No data found in database for id {}", id);
@@ -86,10 +86,10 @@ public class TradeController {
     @GetMapping("/trade/delete/{id}")
     public String deleteTrade(@PathVariable("id") Integer id, Model model) {
         logger.debug("Access /trade/delete/{} page.", id);
-        Optional<Trade> trade = tradeService.getTradeById(id);
+        Trade trade = tradeService.getTradeById(id);
 
-        if (trade.isPresent()) {
-            tradeService.deleteTrade(trade.get());
+        if (trade.getTradeId() == id) {
+            tradeService.deleteTrade(trade);
             logger.info("Trade with id {} has been deleted", id);
         }
 

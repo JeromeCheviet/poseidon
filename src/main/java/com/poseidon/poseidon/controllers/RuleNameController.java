@@ -58,9 +58,9 @@ public class RuleNameController {
     @GetMapping("/ruleName/update/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
         logger.debug("Access /ruleName/update/{}", id);
-        Optional<RuleName> ruleName = ruleNameService.getRuleNameById(id);
-        if (ruleName.isPresent()) {
-            model.addAttribute("ruleName", ruleName.get());
+        RuleName ruleName = ruleNameService.getRuleNameById(id);
+        if (ruleName.getId() == id) {
+            model.addAttribute("ruleName", ruleName);
             return "ruleName/update";
         }
 
@@ -87,10 +87,10 @@ public class RuleNameController {
     @GetMapping("/ruleName/delete/{id}")
     public String deleteRuleName(@PathVariable("id") Integer id, Model model) {
         logger.debug("Access /ruleName/delete/{} page.", id);
-        Optional<RuleName> ruleName = ruleNameService.getRuleNameById(id);
+        RuleName ruleName = ruleNameService.getRuleNameById(id);
 
-        if (ruleName.isPresent()) {
-            ruleNameService.deleteRuleName(ruleName.get());
+        if (ruleName.getId() == id) {
+            ruleNameService.deleteRuleName(ruleName);
             logger.info("Rule name with id {} has been deleted.", id);
         }
 

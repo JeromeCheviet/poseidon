@@ -2,8 +2,6 @@ package com.poseidon.poseidon.service;
 
 import com.poseidon.poseidon.domain.BidList;
 
-import java.util.Optional;
-
 /**
  * Interface link to BidList operations
  */
@@ -15,7 +13,7 @@ public interface BidListService {
      */
     Iterable<BidList> getBidLists();
 
-    Optional<BidList> getBidlistById(int bidListId);
+    BidList getBidlistById(int bidListId);
 
     void deleteBidList(BidList bidList);
 
