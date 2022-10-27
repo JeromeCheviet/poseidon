@@ -1,6 +1,8 @@
 package com.poseidon.poseidon.service;
 
 import com.poseidon.poseidon.domain.CurvePoint;
+import com.poseidon.poseidon.exception.CurvePointNotDeletedException;
+import com.poseidon.poseidon.exception.CurvePointNotFoundException;
 import com.poseidon.poseidon.repositories.CurvePointRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -62,22 +64,52 @@ class CurvePointServiceTest {
     }
 
     @Test
-    void testCurveListById() {
+    void testGetCurvePointById() {
         when(curvePointRepository.findById(1)).thenReturn(Optional.ofNullable(expectedCurvePoint));
 
-        Optional<CurvePoint> actualCurvePoint = curvePointService.getCurvePointById(1);
+        CurvePoint actualCurvePoint = curvePointService.getCurvePointById(1);
 
-        assertEquals(expectedCurvePoint, actualCurvePoint.get());
+        assertEquals(expectedCurvePoint, actualCurvePoint);
         verify(curvePointRepository, times(1)).findById(1);
+    }
+
+    @Test
+    void testGetCurvePointByID_whenEmpty_returnException() {
+        when(curvePointRepository.findById(100)).thenReturn(Optional.empty());
+
+        Throwable exception = assertThrows(CurvePointNotFoundException.class, () -> {
+            curvePointService.getCurvePointById(100);
+        });
+
+        assertEquals("CurvePoint with id 100 not found", exception.getMessage());
+        verify(curvePointRepository, times(1)).findById(100);
     }
 
     @Test
     void testDeleteCurvePoint() {
         doNothing().when(curvePointRepository).delete(expectedCurvePoint);
+        when(curvePointRepository.findById(1)).thenReturn(Optional.empty());
 
-        curvePointService.deleteCurvePoint(expectedCurvePoint);
+        assertDoesNotThrow(
+                () -> curvePointService.deleteCurvePoint(expectedCurvePoint)
+        );
 
         verify(curvePointRepository, times(1)).delete(expectedCurvePoint);
+        verify(curvePointRepository, times(1)).findById(1);
+    }
+
+    @Test
+    void testDeleteCurvePoint_whenCurvePointIsPresent_returnException() {
+        doNothing().when(curvePointRepository).delete(expectedCurvePoint);
+        when(curvePointRepository.findById(1)).thenReturn(Optional.ofNullable(expectedCurvePoint));
+
+        Throwable exception = assertThrows(CurvePointNotDeletedException.class, () -> {
+            curvePointService.deleteCurvePoint(expectedCurvePoint);
+        });
+
+        assertEquals("CurvePoint with id 1 has not been deleted", exception.getMessage());
+        verify(curvePointRepository, times(1)).delete(expectedCurvePoint);
+        verify(curvePointRepository, times(1)).findById(1);
     }
 
     @Test

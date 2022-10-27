@@ -1,9 +1,11 @@
 package com.poseidon.poseidon.service;
 
 import com.poseidon.poseidon.domain.BidList;
+import com.poseidon.poseidon.exception.BidListNotDeletedException;
+import com.poseidon.poseidon.exception.BidListNotFoundException;
 import com.poseidon.poseidon.repositories.BidListRepository;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -15,6 +17,8 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -98,10 +102,22 @@ class BidListServiceTest {
     void testGetBidListById() {
         when(bidListRepository.findById(1)).thenReturn(Optional.ofNullable(expectedBidList));
 
-        Optional<BidList> actualBidList = bidListService.getBidlistById(1);
+        BidList actualBidList = bidListService.getBidlistById(1);
 
-        assertEquals(expectedBidList, actualBidList.get());
+        assertEquals(expectedBidList, actualBidList);
         verify(bidListRepository, times(1)).findById(1);
+    }
+
+    @Test
+    void testGetBidListById_whenEmpty_returnException() {
+        when(bidListRepository.findById(100)).thenReturn(Optional.empty());
+
+        Throwable exception = assertThrows(BidListNotFoundException.class, () -> {
+            bidListService.getBidlistById(100);
+        });
+
+        assertEquals("Bidlist with id 100 not found", exception.getMessage());
+        verify(bidListRepository, times(1)).findById(100);
     }
 
     @Test
@@ -129,9 +145,27 @@ class BidListServiceTest {
     @Test
     void testDeleteBidList() {
         doNothing().when(bidListRepository).delete(expectedBidList);
+        when(bidListRepository.findById(1)).thenReturn(Optional.empty());
 
-        bidListService.deleteBidList(expectedBidList);
+        assertDoesNotThrow(
+                () -> bidListService.deleteBidList(expectedBidList)
+        );
 
         verify(bidListRepository, times(1)).delete(expectedBidList);
+        verify(bidListRepository, times(1)).findById(1);
+    }
+
+    @Test
+    void testDeleteBidList_whenBidListIsPresent_returnException() {
+        doNothing().when(bidListRepository).delete(expectedBidList);
+        when(bidListRepository.findById(1)).thenReturn(Optional.ofNullable(expectedBidList));
+
+        Throwable exception = assertThrows(BidListNotDeletedException.class, () -> {
+            bidListService.deleteBidList(expectedBidList);
+        });
+
+        assertEquals("Bidlist with id 1 has not been deleted", exception.getMessage());
+        verify(bidListRepository, times(1)).delete(expectedBidList);
+        verify(bidListRepository, times(1)).findById(1);
     }
 }

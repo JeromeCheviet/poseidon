@@ -1,6 +1,8 @@
 package com.poseidon.poseidon.service;
 
 import com.poseidon.poseidon.domain.Trade;
+import com.poseidon.poseidon.exception.TradeNotDeletedException;
+import com.poseidon.poseidon.exception.TradeNotFoundException;
 import com.poseidon.poseidon.repositories.TradeRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -94,19 +96,49 @@ class TradeServiceTest {
     void testGetTradeById() {
         when(tradeRepository.findById(1)).thenReturn(Optional.ofNullable(expectedTrade));
 
-        Optional<Trade> actualTrade = tradeService.getTradeById(1);
+        Trade actualTrade = tradeService.getTradeById(1);
 
-        assertEquals(expectedTrade, actualTrade.get());
+        assertEquals(expectedTrade, actualTrade);
         verify(tradeRepository, times(1)).findById(1);
+    }
+
+    @Test
+    void testGetTradeById_whenEmpty_returnException() {
+        when(tradeRepository.findById(100)).thenReturn(Optional.empty());
+
+        Throwable exception = assertThrows(TradeNotFoundException.class, () -> {
+            tradeService.getTradeById(100);
+        });
+
+        assertEquals("Trade with id 100 not found", exception.getMessage());
+        verify(tradeRepository, times(1)).findById(100);
     }
 
     @Test
     void testDeleteTrade() {
         doNothing().when(tradeRepository).delete(expectedTrade);
+        when(tradeRepository.findById(1)).thenReturn(Optional.empty());
 
-        tradeService.deleteTrade(expectedTrade);
+        assertDoesNotThrow(
+                () -> tradeService.deleteTrade(expectedTrade)
+        );
 
         verify(tradeRepository, times(1)).delete(expectedTrade);
+        verify(tradeRepository, times(1)).findById(1);
+    }
+
+    @Test
+    void testDeleteTrade_whenTradeIsPresent_returnException() {
+        doNothing().when(tradeRepository).delete(expectedTrade);
+        when(tradeRepository.findById(1)).thenReturn(Optional.ofNullable(expectedTrade));
+
+        Throwable exception = assertThrows(TradeNotDeletedException.class, () -> {
+            tradeService.deleteTrade(expectedTrade);
+        });
+
+        assertEquals("Trade with id 1 has not been deleted", exception.getMessage());
+        verify(tradeRepository, times(1)).delete(expectedTrade);
+        verify(tradeRepository, times(1)).findById(1);
     }
 
     @Test

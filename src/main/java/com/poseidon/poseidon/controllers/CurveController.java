@@ -57,13 +57,13 @@ public class CurveController {
     @GetMapping("/curvePoint/update/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
         logger.debug("Access /curvePoint/update/{} page", id);
-        Optional<CurvePoint> curvePoint = curvePointService.getCurvePointById(id);
-        if (curvePoint.isPresent()) {
-            model.addAttribute("curvePoint", curvePoint.get());
+        CurvePoint curvePoint = curvePointService.getCurvePointById(id);
+        if (curvePoint.getCurveId() == id) {
+            model.addAttribute("curvePoint", curvePoint);
             return "curvePoint/update";
         }
 
-        logger.info("No data fount in database for id {}", id);
+        model.addAttribute("curvePoints", curvePointService.getCurvePointLists());
 
         return "curvePoint/list";
     }
@@ -87,10 +87,10 @@ public class CurveController {
     @GetMapping("/curvePoint/delete/{id}")
     public String deleteBid(@PathVariable("id") Integer id, Model model) {
         logger.debug("Access /curvePoint/delete/{} page", id);
-        Optional<CurvePoint> curvePoint = curvePointService.getCurvePointById(id);
+        CurvePoint curvePoint = curvePointService.getCurvePointById(id);
 
-        if (curvePoint.isPresent()) {
-            curvePointService.deleteCurvePoint(curvePoint.get());
+        if (curvePoint.getCurveId() == id) {
+            curvePointService.deleteCurvePoint(curvePoint);
             logger.info("Curve point with id {} has been deleted.", id);
         }
 

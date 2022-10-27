@@ -29,19 +29,19 @@ public class BidList {
     @NotNull(message = "Bid Quantity is mandatory")
     @DecimalMin(value = "0", inclusive = false, message = "Bid quantity must be positive")
     @Column(name = "bidQuantity")
-    private double bidQuantity;
+    private Double bidQuantity;
 
     @DecimalMin(value = "0", inclusive = false, message = "Bid quantity must be positive")
     @Column(name = "askQuantity")
-    private double askQuantity;
+    private Double askQuantity;
 
     @DecimalMin(value = "0", inclusive = false, message = "Bid must be positive")
     @Column(name = "bid")
-    private double bid;
+    private Double bid;
 
     @DecimalMin(value = "0", inclusive = false, message = "Ask must be positive")
     @Column(name = "ask")
-    private double ask;
+    private Double ask;
 
     @Column(name = "benchmark")
     private String benchmark;
@@ -112,35 +112,35 @@ public class BidList {
         this.type = type;
     }
 
-    public double getBidQuantity() {
+    public Double getBidQuantity() {
         return bidQuantity;
     }
 
-    public void setBidQuantity(double bidQuantity) {
+    public void setBidQuantity(Double bidQuantity) {
         this.bidQuantity = bidQuantity;
     }
 
-    public double getAskQuantity() {
+    public Double getAskQuantity() {
         return askQuantity;
     }
 
-    public void setAskQuantity(double askQuantity) {
+    public void setAskQuantity(Double askQuantity) {
         this.askQuantity = askQuantity;
     }
 
-    public double getBid() {
+    public Double getBid() {
         return bid;
     }
 
-    public void setBid(double bid) {
+    public void setBid(Double bid) {
         this.bid = bid;
     }
 
-    public double getAsk() {
+    public Double getAsk() {
         return ask;
     }
 
-    public void setAsk(double ask) {
+    public void setAsk(Double ask) {
         this.ask = ask;
     }
 

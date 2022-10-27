@@ -1,6 +1,8 @@
 package com.poseidon.poseidon.service;
 
 import com.poseidon.poseidon.domain.Rating;
+import com.poseidon.poseidon.exception.RatingNotDeletedException;
+import com.poseidon.poseidon.exception.RatingNotFoundException;
 import com.poseidon.poseidon.repositories.RatingRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -62,19 +64,49 @@ class RatingServiceTest {
     void testGetRatingById() {
         when(ratingRepository.findById(1)).thenReturn(Optional.ofNullable(expectedRating));
 
-        Optional<Rating> actualRating = ratingService.getRatingById(1);
+        Rating actualRating = ratingService.getRatingById(1);
 
-        assertEquals(expectedRating, actualRating.get());
+        assertEquals(expectedRating, actualRating);
         verify(ratingRepository, times(1)).findById(1);
+    }
+
+    @Test
+    void testGetRatingById_whenEmpty_returnException() {
+        when(ratingRepository.findById(100)).thenReturn(Optional.empty());
+
+        Throwable exception = assertThrows(RatingNotFoundException.class, () -> {
+            ratingService.getRatingById(100);
+        });
+
+        assertEquals("Rating with id 100 not found", exception.getMessage());
+        verify(ratingRepository, times(1)).findById(100);
     }
 
     @Test
     void testDeleteRating() {
         doNothing().when(ratingRepository).delete(expectedRating);
+        when(ratingRepository.findById(1)).thenReturn(Optional.empty());
 
-        ratingService.deleteRating(expectedRating);
+        assertDoesNotThrow(
+                () -> ratingService.deleteRating(expectedRating)
+        );
 
         verify(ratingRepository, times(1)).delete(expectedRating);
+        verify(ratingRepository, times(1)).findById(1);
+    }
+
+    @Test
+    void testDeleteRating_whenRatingIsPresent_returnException() {
+        doNothing().when(ratingRepository).delete(expectedRating);
+        when(ratingRepository.findById(1)).thenReturn(Optional.ofNullable(expectedRating));
+
+        Throwable exception = assertThrows(RatingNotDeletedException.class, () -> {
+            ratingService.deleteRating(expectedRating);
+        });
+
+        assertEquals("Rating with id 1 has not been deleted", exception.getMessage());
+        verify(ratingRepository, times(1)).delete(expectedRating);
+        verify(ratingRepository, times(1)).findById(1);
     }
 
     @Test

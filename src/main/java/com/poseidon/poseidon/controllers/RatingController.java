@@ -58,9 +58,9 @@ public class RatingController {
     @GetMapping("/rating/update/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
         logger.debug("Access /rating/update/{} page.", id);
-        Optional<Rating> rating = ratingService.getRatingById(id);
-        if (rating.isPresent()) {
-            model.addAttribute("rating", rating.get());
+        Rating rating = ratingService.getRatingById(id);
+        if (rating.getId() == id) {
+            model.addAttribute("rating", rating);
             return "rating/update";
         }
         logger.info("No data found in database for id {}", id);
@@ -86,10 +86,10 @@ public class RatingController {
     @GetMapping("/rating/delete/{id}")
     public String deleteRating(@PathVariable("id") Integer id, Model model) {
         logger.debug("Access /rating/delete/{} page", id);
-        Optional<Rating> rating = ratingService.getRatingById(id);
+        Rating rating = ratingService.getRatingById(id);
 
-        if (rating.isPresent()) {
-            ratingService.deleteRating(rating.get());
+        if (rating.getId() == id) {
+            ratingService.deleteRating(rating);
             logger.info("Rating with id {} has been deleted.", id);
         }
 
