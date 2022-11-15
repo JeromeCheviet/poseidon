@@ -14,8 +14,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import javax.sql.DataSource;
-
 @Configuration
 @EnableWebSecurity
 public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
@@ -31,8 +29,8 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
         logger.debug("HTTP security");
         http.csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/", "/home", "/user/list", "/css/**").permitAll()
-                .antMatchers("/user/add", "/user/validate").hasAuthority("ADMIN")
+                .antMatchers("/", "/home", "/signup", "/signup/validate", "/css/**").permitAll()
+                .antMatchers("/user/**").hasAuthority("ADMIN")
                 .anyRequest().authenticated()
                 .and()
                 .formLogin().successForwardUrl("/bidList/list").permitAll()
