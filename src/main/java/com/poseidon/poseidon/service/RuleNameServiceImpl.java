@@ -1,8 +1,8 @@
 package com.poseidon.poseidon.service;
 
 import com.poseidon.poseidon.domain.RuleName;
-import com.poseidon.poseidon.exception.RuleNameNotDeletedException;
-import com.poseidon.poseidon.exception.RuleNameNotFoundException;
+import com.poseidon.poseidon.exception.DataNotDeletedException;
+import com.poseidon.poseidon.exception.DataNotFoundException;
 import com.poseidon.poseidon.repositories.RuleNameRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -30,7 +30,7 @@ public class RuleNameServiceImpl implements RuleNameService {
         logger.debug("Get rule name with id {}", ruleNameId);
 
         return ruleNameRepository.findById(ruleNameId).orElseThrow(
-                () -> new RuleNameNotFoundException("Rule name with id " + ruleNameId + " not found")
+                () -> new DataNotFoundException("Rule name with id " + ruleNameId + " not found")
         );
     }
 
@@ -43,7 +43,7 @@ public class RuleNameServiceImpl implements RuleNameService {
 
         Optional<RuleName> deletedRuleName = ruleNameRepository.findById(id);
         if (deletedRuleName.isPresent())
-            throw new RuleNameNotDeletedException("Rule name with id " + id + " has not been deleted");
+            throw new DataNotDeletedException("Rule name with id " + id + " has not been deleted");
     }
 
     @Override

@@ -1,8 +1,8 @@
 package com.poseidon.poseidon.service;
 
 import com.poseidon.poseidon.domain.CurvePoint;
-import com.poseidon.poseidon.exception.CurvePointNotDeletedException;
-import com.poseidon.poseidon.exception.CurvePointNotFoundException;
+import com.poseidon.poseidon.exception.DataNotDeletedException;
+import com.poseidon.poseidon.exception.DataNotFoundException;
 import com.poseidon.poseidon.repositories.CurvePointRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -35,7 +35,7 @@ public class CurvePointServiceImpl implements CurvePointService {
 
         Optional<CurvePoint> deletedCurvePoint = curvePointRepository.findById(id);
         if (deletedCurvePoint.isPresent())
-            throw new CurvePointNotDeletedException("CurvePoint with id " + id + " has not been deleted");
+            throw new DataNotDeletedException("CurvePoint with id " + id + " has not been deleted");
     }
 
     @Override
@@ -43,7 +43,7 @@ public class CurvePointServiceImpl implements CurvePointService {
         logger.debug("Get Curve Point with id : {}", curvePointId);
 
         return curvePointRepository.findById(curvePointId).orElseThrow(
-                () -> new CurvePointNotFoundException("CurvePoint with id " + curvePointId + " not found")
+                () -> new DataNotFoundException("CurvePoint with id " + curvePointId + " not found")
         );
     }
 

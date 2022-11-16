@@ -1,8 +1,8 @@
 package com.poseidon.poseidon.service;
 
 import com.poseidon.poseidon.domain.Rating;
-import com.poseidon.poseidon.exception.RatingNotDeletedException;
-import com.poseidon.poseidon.exception.RatingNotFoundException;
+import com.poseidon.poseidon.exception.DataNotDeletedException;
+import com.poseidon.poseidon.exception.DataNotFoundException;
 import com.poseidon.poseidon.repositories.RatingRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -31,7 +31,7 @@ class RatingServiceTest {
     private Rating expectedRating;
 
     @BeforeEach
-    private void setUp(){
+    private void setUp() {
         int expectedRatingId = 1;
         String expectedMoodysRating = "moody";
         String expectedSandRating = "sand";
@@ -74,7 +74,7 @@ class RatingServiceTest {
     void testGetRatingById_whenEmpty_returnException() {
         when(ratingRepository.findById(100)).thenReturn(Optional.empty());
 
-        Throwable exception = assertThrows(RatingNotFoundException.class, () -> {
+        Throwable exception = assertThrows(DataNotFoundException.class, () -> {
             ratingService.getRatingById(100);
         });
 
@@ -100,7 +100,7 @@ class RatingServiceTest {
         doNothing().when(ratingRepository).delete(expectedRating);
         when(ratingRepository.findById(1)).thenReturn(Optional.ofNullable(expectedRating));
 
-        Throwable exception = assertThrows(RatingNotDeletedException.class, () -> {
+        Throwable exception = assertThrows(DataNotDeletedException.class, () -> {
             ratingService.deleteRating(expectedRating);
         });
 

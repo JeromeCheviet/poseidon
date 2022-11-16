@@ -1,8 +1,8 @@
 package com.poseidon.poseidon.service;
 
 import com.poseidon.poseidon.domain.RuleName;
-import com.poseidon.poseidon.exception.RuleNameNotDeletedException;
-import com.poseidon.poseidon.exception.RuleNameNotFoundException;
+import com.poseidon.poseidon.exception.DataNotDeletedException;
+import com.poseidon.poseidon.exception.DataNotFoundException;
 import com.poseidon.poseidon.repositories.RuleNameRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -77,7 +77,7 @@ class RuleNameServiceTest {
     void testGetRuleNameById_whenEmpty_returnException() {
         when(ruleNameRepository.findById(100)).thenReturn(Optional.empty());
 
-        Throwable exception = assertThrows(RuleNameNotFoundException.class, () -> {
+        Throwable exception = assertThrows(DataNotFoundException.class, () -> {
             ruleNameService.getRuleNameById(100);
         });
 
@@ -103,7 +103,7 @@ class RuleNameServiceTest {
         doNothing().when(ruleNameRepository).delete(expectedRuleName);
         when(ruleNameRepository.findById(1)).thenReturn(Optional.ofNullable(expectedRuleName));
 
-        Throwable exception = assertThrows(RuleNameNotDeletedException.class, () -> {
+        Throwable exception = assertThrows(DataNotDeletedException.class, () -> {
             ruleNameService.deleteRuleName(expectedRuleName);
         });
 
