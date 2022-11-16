@@ -1,8 +1,8 @@
 package com.poseidon.poseidon.service;
 
 import com.poseidon.poseidon.domain.BidList;
-import com.poseidon.poseidon.exception.BidListNotDeletedException;
-import com.poseidon.poseidon.exception.BidListNotFoundException;
+import com.poseidon.poseidon.exception.DataNotDeletedException;
+import com.poseidon.poseidon.exception.DataNotFoundException;
 import com.poseidon.poseidon.repositories.BidListRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -35,7 +35,7 @@ public class BidListServiceImpl implements BidListService {
         logger.debug("Get bidlist with id : {}", bidListId);
 
         return bidListRepository.findById(bidListId).orElseThrow(
-                () -> new BidListNotFoundException("Bidlist with id " + bidListId + " not found")
+                () -> new DataNotFoundException("Bidlist with id " + bidListId + " not found")
         );
     }
 
@@ -48,7 +48,7 @@ public class BidListServiceImpl implements BidListService {
 
         Optional<BidList> deletedBidlist = bidListRepository.findById(id);
         if (deletedBidlist.isPresent())
-            throw new BidListNotDeletedException("Bidlist with id " + id + " has not been deleted");
+            throw new DataNotDeletedException("Bidlist with id " + id + " has not been deleted");
     }
 
     @Override

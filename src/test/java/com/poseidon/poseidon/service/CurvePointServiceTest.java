@@ -1,8 +1,8 @@
 package com.poseidon.poseidon.service;
 
 import com.poseidon.poseidon.domain.CurvePoint;
-import com.poseidon.poseidon.exception.CurvePointNotDeletedException;
-import com.poseidon.poseidon.exception.CurvePointNotFoundException;
+import com.poseidon.poseidon.exception.DataNotDeletedException;
+import com.poseidon.poseidon.exception.DataNotFoundException;
 import com.poseidon.poseidon.repositories.CurvePointRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -77,7 +77,7 @@ class CurvePointServiceTest {
     void testGetCurvePointByID_whenEmpty_returnException() {
         when(curvePointRepository.findById(100)).thenReturn(Optional.empty());
 
-        Throwable exception = assertThrows(CurvePointNotFoundException.class, () -> {
+        Throwable exception = assertThrows(DataNotFoundException.class, () -> {
             curvePointService.getCurvePointById(100);
         });
 
@@ -103,7 +103,7 @@ class CurvePointServiceTest {
         doNothing().when(curvePointRepository).delete(expectedCurvePoint);
         when(curvePointRepository.findById(1)).thenReturn(Optional.ofNullable(expectedCurvePoint));
 
-        Throwable exception = assertThrows(CurvePointNotDeletedException.class, () -> {
+        Throwable exception = assertThrows(DataNotDeletedException.class, () -> {
             curvePointService.deleteCurvePoint(expectedCurvePoint);
         });
 

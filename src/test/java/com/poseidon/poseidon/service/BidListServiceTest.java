@@ -1,8 +1,8 @@
 package com.poseidon.poseidon.service;
 
 import com.poseidon.poseidon.domain.BidList;
-import com.poseidon.poseidon.exception.BidListNotDeletedException;
-import com.poseidon.poseidon.exception.BidListNotFoundException;
+import com.poseidon.poseidon.exception.DataNotDeletedException;
+import com.poseidon.poseidon.exception.DataNotFoundException;
 import com.poseidon.poseidon.repositories.BidListRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -112,7 +112,7 @@ class BidListServiceTest {
     void testGetBidListById_whenEmpty_returnException() {
         when(bidListRepository.findById(100)).thenReturn(Optional.empty());
 
-        Throwable exception = assertThrows(BidListNotFoundException.class, () -> {
+        Throwable exception = assertThrows(DataNotFoundException.class, () -> {
             bidListService.getBidlistById(100);
         });
 
@@ -160,7 +160,7 @@ class BidListServiceTest {
         doNothing().when(bidListRepository).delete(expectedBidList);
         when(bidListRepository.findById(1)).thenReturn(Optional.ofNullable(expectedBidList));
 
-        Throwable exception = assertThrows(BidListNotDeletedException.class, () -> {
+        Throwable exception = assertThrows(DataNotDeletedException.class, () -> {
             bidListService.deleteBidList(expectedBidList);
         });
 

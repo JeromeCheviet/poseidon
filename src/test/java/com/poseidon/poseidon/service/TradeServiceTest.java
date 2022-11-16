@@ -1,8 +1,8 @@
 package com.poseidon.poseidon.service;
 
 import com.poseidon.poseidon.domain.Trade;
-import com.poseidon.poseidon.exception.TradeNotDeletedException;
-import com.poseidon.poseidon.exception.TradeNotFoundException;
+import com.poseidon.poseidon.exception.DataNotDeletedException;
+import com.poseidon.poseidon.exception.DataNotFoundException;
 import com.poseidon.poseidon.repositories.TradeRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -46,7 +46,7 @@ class TradeServiceTest {
         String expectedTrader = "trader";
         String expectedBenchmark = "benchmark";
         String expectedBook = "book";
-        String expectedCreationName ="name";
+        String expectedCreationName = "name";
         LocalDate expectedCreationDate = LocalDate.now().minusMonths(6);
         String expectedRevisionName = "revision";
         LocalDate expectedRevisionDate = LocalDate.now().minusMonths(2);
@@ -106,7 +106,7 @@ class TradeServiceTest {
     void testGetTradeById_whenEmpty_returnException() {
         when(tradeRepository.findById(100)).thenReturn(Optional.empty());
 
-        Throwable exception = assertThrows(TradeNotFoundException.class, () -> {
+        Throwable exception = assertThrows(DataNotFoundException.class, () -> {
             tradeService.getTradeById(100);
         });
 
@@ -132,7 +132,7 @@ class TradeServiceTest {
         doNothing().when(tradeRepository).delete(expectedTrade);
         when(tradeRepository.findById(1)).thenReturn(Optional.ofNullable(expectedTrade));
 
-        Throwable exception = assertThrows(TradeNotDeletedException.class, () -> {
+        Throwable exception = assertThrows(DataNotDeletedException.class, () -> {
             tradeService.deleteTrade(expectedTrade);
         });
 
@@ -149,6 +149,7 @@ class TradeServiceTest {
 
         verify(tradeRepository, times(1)).save(expectedTrade);
     }
+
     @Test
     void testUpdateTrade() {
         expectedTrade.setAccount("updated account");

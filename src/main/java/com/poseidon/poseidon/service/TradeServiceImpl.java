@@ -1,8 +1,8 @@
 package com.poseidon.poseidon.service;
 
 import com.poseidon.poseidon.domain.Trade;
-import com.poseidon.poseidon.exception.TradeNotDeletedException;
-import com.poseidon.poseidon.exception.TradeNotFoundException;
+import com.poseidon.poseidon.exception.DataNotDeletedException;
+import com.poseidon.poseidon.exception.DataNotFoundException;
 import com.poseidon.poseidon.repositories.TradeRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -30,7 +30,7 @@ public class TradeServiceImpl implements TradeService {
         logger.debug("Get trade with id : {}", tradeId);
 
         return tradeRepository.findById(tradeId).orElseThrow(
-                () -> new TradeNotFoundException("Trade with id " + tradeId + " not found")
+                () -> new DataNotFoundException("Trade with id " + tradeId + " not found")
         );
     }
 
@@ -43,7 +43,7 @@ public class TradeServiceImpl implements TradeService {
 
         Optional<Trade> deletedTrade = tradeRepository.findById(id);
         if (deletedTrade.isPresent())
-            throw new TradeNotDeletedException("Trade with id " + id + " has not been deleted");
+            throw new DataNotDeletedException("Trade with id " + id + " has not been deleted");
     }
 
     @Override
