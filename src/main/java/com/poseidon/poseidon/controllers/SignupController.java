@@ -41,6 +41,6 @@ public class SignupController {
         userRepository.save(user);
         logger.info("User {} has been added", user.getUsername());
 
-        return "bidList/list";
+        return "redirect:/bidList/list";
     }
 }

@@ -2,45 +2,53 @@ package com.poseidon.poseidon;
 
 import com.poseidon.poseidon.domain.Trade;
 import com.poseidon.poseidon.repositories.TradeRepository;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-@RunWith(SpringRunner.class)
+import static org.junit.jupiter.api.Assertions.*;
+
+@ExtendWith(SpringExtension.class)
 @SpringBootTest
-public class TradeTests {
+@Sql(scripts = "/schema.sql")
+class TradeTests {
 
-	@Autowired
-	private TradeRepository tradeRepository;
+    @Autowired
+    private TradeRepository tradeRepository;
 
-/*	@Test
-	public void tradeTest() {
-		Trade trade = new Trade("Trade Account", "Type");
+    @Test
+    void tradeTest() {
+        Trade trade = new Trade();
+        trade.setAccount("Trade Account");
+        trade.setType("Type");
 
-		// Save
-		trade = tradeRepository.save(trade);
-		Assert.assertNotNull(trade.getTradeId());
-		Assert.assertTrue(trade.getAccount().equals("Trade Account"));
+        // Save
+        trade = tradeRepository.save(trade);
+        assertNotNull(trade.getTradeId());
+        assertTrue(trade.getAccount().equals("Trade Account"));
 
-		// Update
-		trade.setAccount("Trade Account Update");
-		trade = tradeRepository.save(trade);
-		Assert.assertTrue(trade.getAccount().equals("Trade Account Update"));
+        // Update
+        trade.setAccount("Trade Account Update");
+        trade = tradeRepository.save(trade);
+        assertTrue(trade.getAccount().equals("Trade Account Update"));
 
-		// Find
-		List<Trade> listResult = tradeRepository.findAll();
-		Assert.assertTrue(listResult.size() > 0);
+        // Find
+        Iterable<Trade> trades = tradeRepository.findAll();
+        List<Trade> listResult = new ArrayList<>();
+        trades.forEach(listResult::add);
+        assertTrue(listResult.size() > 0);
 
-		// Delete
-		Integer id = trade.getTradeId();
-		tradeRepository.delete(trade);
-		Optional<Trade> tradeList = tradeRepository.findById(id);
-		Assert.assertFalse(tradeList.isPresent());
-	}*/
+        // Delete
+        Integer id = trade.getTradeId();
+        tradeRepository.delete(trade);
+        Optional<Trade> tradeList = tradeRepository.findById(id);
+        assertFalse(tradeList.isPresent());
+    }
 }

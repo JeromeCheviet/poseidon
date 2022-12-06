@@ -2,45 +2,55 @@ package com.poseidon.poseidon;
 
 import com.poseidon.poseidon.domain.Rating;
 import com.poseidon.poseidon.repositories.RatingRepository;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-@RunWith(SpringRunner.class)
+import static org.junit.jupiter.api.Assertions.*;
+
+@ExtendWith(SpringExtension.class)
 @SpringBootTest
-public class RatingTests {
+@Sql(scripts = "/schema.sql")
+class RatingTests {
 
-	@Autowired
-	private RatingRepository ratingRepository;
+    @Autowired
+    private RatingRepository ratingRepository;
 
-/*	@Test
-	public void ratingTest() {
-		Rating rating = new Rating("Moodys Rating", "Sand PRating", "Fitch Rating", 10);
+    @Test
+    void ratingTest() {
+        Rating rating = new Rating();
+        rating.setMoodysRating("Moodys Rating");
+        rating.setSandPRating("Sand PRating");
+        rating.setFitchRating("Fitch Rating");
+        rating.setOrderNumber(10);
 
-		// Save
-		rating = ratingRepository.save(rating);
-		Assert.assertNotNull(rating.getId());
-		Assert.assertTrue(rating.getOrderNumber() == 10);
+        // Save
+        rating = ratingRepository.save(rating);
+        assertNotNull(rating.getId());
+        assertTrue(rating.getOrderNumber() == 10);
 
-		// Update
-		rating.setOrderNumber(20);
-		rating = ratingRepository.save(rating);
-		Assert.assertTrue(rating.getOrderNumber() == 20);
+        // Update
+        rating.setOrderNumber(20);
+        rating = ratingRepository.save(rating);
+        assertTrue(rating.getOrderNumber() == 20);
 
-		// Find
-		List<Rating> listResult = ratingRepository.findAll();
-		Assert.assertTrue(listResult.size() > 0);
+        // Find
+        Iterable<Rating> ratings = ratingRepository.findAll();
+        List<Rating> listResult = new ArrayList<>();
+        ratings.forEach(listResult::add);
+        assertTrue(listResult.size() > 0);
 
-		// Delete
-		Integer id = rating.getId();
-		ratingRepository.delete(rating);
-		Optional<Rating> ratingList = ratingRepository.findById(id);
-		Assert.assertFalse(ratingList.isPresent());
-	}*/
+        // Delete
+        Integer id = rating.getId();
+        ratingRepository.delete(rating);
+        Optional<Rating> ratingList = ratingRepository.findById(id);
+        assertFalse(ratingList.isPresent());
+    }
 }

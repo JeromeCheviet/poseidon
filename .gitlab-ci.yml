@@ -1,6 +1,11 @@
 variables:
   MAVEN_OPTS: "-Dmaven.repo.local=$CI_PROJECT_DIR/.m2/repository -Dstyle.color=always -XX:+TieredCompilation -XX:TieredStopAtLevel=1 -Djansi.force=true"
   SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"
+  MYSQL_DATABASE: "poseidon_test"
+  MYSQL_ROOT_PASSWORD: "rootroot"
+  MYSQL_USER: "poseidon"
+  MYSQL_PASSWORD: "P0s31d0n"
+  MYSQL_HOST: "mysql"
 
 cache:
   paths:
@@ -15,7 +20,7 @@ stages:
 .ignore:
   except:
     changes:
-      - ".gitlab-ci.yml"
+      #- ".gitlab-ci.yml"
       - ".gitignore"
       - "docker-compose.yml"
       - "*.md"
@@ -26,7 +31,11 @@ stages:
 Test-code:
   stage: test
   image: maven:3.8.4-openjdk-11-slim
+  services:
+    - mysql:8.0.30
   extends: .ignore
+  before_script:
+    - sed -i 's/127.0.0.1/mysql/' src/test/resources/application.properties
   script:
     - mvn ${MVN_OPTS} verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=JeromeCheviet_poseidon -Dsonar.organization=jeromecheviet -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_TOKEN -Dsonar.home=${SONAR_USER_HOME}
     - awk -F"," '{ lines += $8 + $9; covered += $9 } END { print covered, "/", lines, "lines covered"; print 100*covered/lines, "% covered" }' target/site/jacoco/jacoco.csv || echo "0.0 % covered"
@@ -39,7 +48,6 @@ Build-JAR:
   image: maven:3.8.4-openjdk-11-slim
   dependencies :
     - Test-code
-  #extends: .ignore
   script:
     - mvn ${MVN_OPTS} -Drevision=x.y.z-SUFFIX -DskipTests -B clean install
   artifacts:
