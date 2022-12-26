@@ -14,6 +14,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+/**
+ * Class to configure authentication and authorization for Spring Security
+ */
 @Configuration
 @EnableWebSecurity
 public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
@@ -24,6 +27,12 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     @Qualifier("userDetailsServiceImpl")
     private UserDetailsService customUserDetailsService;
 
+    /**
+     * {@inheritDoc}
+     *
+     * @param http
+     * @throws Exception
+     */
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         logger.debug("HTTP security");
@@ -40,12 +49,23 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .logout().logoutUrl("/app-logout").logoutSuccessUrl("/");
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @param auth
+     * @throws Exception
+     */
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         logger.debug("Authentication Manager");
         auth.userDetailsService(customUserDetailsService).passwordEncoder(passwordEncoder());
     }
 
+    /**
+     * Method to encode password with BCrypt hash
+     *
+     * @return encoded password
+     */
     @Bean
     public PasswordEncoder passwordEncoder() {
         logger.debug("Encode password");

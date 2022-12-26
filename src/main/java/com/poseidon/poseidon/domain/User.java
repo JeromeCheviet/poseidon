@@ -7,6 +7,9 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
+/**
+ * Class use to connect data of table users into an object
+ */
 @Entity
 @DynamicUpdate
 @Table(name = "users")

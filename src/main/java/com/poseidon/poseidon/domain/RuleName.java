@@ -7,6 +7,9 @@ import javax.validation.constraints.NotBlank;
 // import javax.validation.constraints.NotBlank;
 import java.sql.Timestamp;
 
+/**
+ * Class use to connect data of table rulename into an object
+ */
 @Entity
 @DynamicUpdate
 @Table(name = "rulename")

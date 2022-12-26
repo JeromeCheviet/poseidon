@@ -6,6 +6,9 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
+/**
+ * Interface to build queries runs in table users.
+ */
 @Repository
 public interface UserRepository extends CrudRepository<User, Integer> {
 

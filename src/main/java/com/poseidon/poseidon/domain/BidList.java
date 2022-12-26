@@ -7,7 +7,7 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 /**
- * Class use to connect data of table BidList into an object
+ * Class use to connect data of table bidList into an object
  */
 @Entity
 @Table(name = "bidlist")

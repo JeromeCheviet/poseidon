@@ -11,6 +11,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+/**
+ * Class to interact with Rating table data
+ */
 @Service
 public class RatingServiceImpl implements RatingService {
 
@@ -19,6 +22,9 @@ public class RatingServiceImpl implements RatingService {
     @Autowired
     private RatingRepository ratingRepository;
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Iterable<Rating> getRatingList() {
         logger.debug("Get all rating");
@@ -26,6 +32,12 @@ public class RatingServiceImpl implements RatingService {
         return ratingRepository.findAll();
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * <br>Before deleting, the method save the Rating ID in a variable. After deleted the Rating, the method
+     * search if a Rating with this ID exist. If Rating is present, a private exception is throw.
+     */
     @Override
     public void deleteRating(Rating rating) {
         int id = rating.getId();
@@ -38,6 +50,11 @@ public class RatingServiceImpl implements RatingService {
             throw new DataNotDeletedException("Rating with id " + id + " has not been deleted");
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * <br>If no Rating is found, a private exception is throw.
+     */
     @Override
     public Rating getRatingById(int ratingId) {
         logger.debug("Get rating with id : {}", ratingId);
@@ -47,6 +64,9 @@ public class RatingServiceImpl implements RatingService {
         );
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void addRating(Rating rating) {
         logger.debug("Add new rating : {}", rating.getMoodysRating());
@@ -54,6 +74,9 @@ public class RatingServiceImpl implements RatingService {
         ratingRepository.save(rating);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void updateRating(int existingRatingId, Rating rating) {
         logger.debug("Updating rating with id {}", existingRatingId);

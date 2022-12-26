@@ -23,6 +23,9 @@ public class BidListServiceImpl implements BidListService {
     private BidListRepository bidListRepository;
 
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Iterable<BidList> getBidLists() {
         logger.debug("Get all bid list.");
@@ -30,6 +33,11 @@ public class BidListServiceImpl implements BidListService {
         return bidListRepository.findAll();
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * <br>If no Bid is found, a private exception is throw.
+     */
     @Override
     public BidList getBidlistById(int bidListId) {
         logger.debug("Get bidlist with id : {}", bidListId);
@@ -39,6 +47,12 @@ public class BidListServiceImpl implements BidListService {
         );
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * <br>Before deleting, the method save the Bid ID in a variable. After deleted the Bid, the method
+     * search if a Bid with this ID exist. If Bid is present, a private exception is throw.
+     */
     @Override
     public void deleteBidList(BidList bidList) {
         int id = bidList.getBidListId();
@@ -51,6 +65,9 @@ public class BidListServiceImpl implements BidListService {
             throw new DataNotDeletedException("Bidlist with id " + id + " has not been deleted");
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void addBidList(BidList bidList) {
         logger.debug("Add new bidlist : {}", bidList.getBidListId());
@@ -58,6 +75,9 @@ public class BidListServiceImpl implements BidListService {
         bidListRepository.save(bidList);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void updateBidList(int existingBidlistId, BidList bidList) {
         logger.debug("Updating bidlist with id {} and account name {}", existingBidlistId, bidList.getAccount());
