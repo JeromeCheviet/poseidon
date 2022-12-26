@@ -7,6 +7,9 @@ import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+/**
+ * Class use to connect data of table rating into an object
+ */
 @Entity
 @DynamicUpdate
 @Table(name = "rating")

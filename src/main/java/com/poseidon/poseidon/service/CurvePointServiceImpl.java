@@ -11,6 +11,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+/**
+ * Class to interact with CurvePoint table data
+ */
 @Service
 public class CurvePointServiceImpl implements CurvePointService {
 
@@ -19,6 +22,9 @@ public class CurvePointServiceImpl implements CurvePointService {
     @Autowired
     private CurvePointRepository curvePointRepository;
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Iterable<CurvePoint> getCurvePointLists() {
         logger.debug("Get all Curve point");
@@ -26,6 +32,12 @@ public class CurvePointServiceImpl implements CurvePointService {
         return curvePointRepository.findAll();
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * <br>Before deleting, the method save the Curve point ID in a variable. After deleted the curve point, the method
+     * search if a Curve point with this ID exist. If Curve point is present, a private exception is throw.
+     */
     @Override
     public void deleteCurvePoint(CurvePoint curvePoint) {
         int id = curvePoint.getId();
@@ -38,6 +50,11 @@ public class CurvePointServiceImpl implements CurvePointService {
             throw new DataNotDeletedException("CurvePoint with id " + id + " has not been deleted");
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * <br>If no Curve point is found, a private exception is throw.
+     */
     @Override
     public CurvePoint getCurvePointById(int curvePointId) {
         logger.debug("Get Curve Point with id : {}", curvePointId);
@@ -47,6 +64,9 @@ public class CurvePointServiceImpl implements CurvePointService {
         );
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void addCurvePoint(CurvePoint curvePoint) {
         logger.debug("Add new Curve Point : {}", curvePoint.getCurveId());
@@ -54,6 +74,9 @@ public class CurvePointServiceImpl implements CurvePointService {
         curvePointRepository.save(curvePoint);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void updateCurvePoint(int existingCurvePointId, CurvePoint curvePoint) {
         logger.debug("Updating curve point with id {}", existingCurvePointId);

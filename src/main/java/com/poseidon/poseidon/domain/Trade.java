@@ -8,6 +8,9 @@ import javax.validation.constraints.NotBlank;
 import java.time.LocalDate;
 
 
+/**
+ * Class use to connect data of table trade into an object
+ */
 @Entity
 @DynamicUpdate
 @Table(name = "trade")

@@ -11,6 +11,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+/**
+ * Class to interact with Trade table data
+ */
 @Service
 public class TradeServiceImpl implements TradeService {
     private static final Logger logger = LogManager.getLogger(TradeServiceImpl.class);
@@ -18,6 +21,9 @@ public class TradeServiceImpl implements TradeService {
     @Autowired
     private TradeRepository tradeRepository;
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Iterable<Trade> getTradeList() {
         logger.debug("Get all trades");
@@ -25,6 +31,11 @@ public class TradeServiceImpl implements TradeService {
         return tradeRepository.findAll();
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * <br>If no Trade is found, a private exception is throw.
+     */
     @Override
     public Trade getTradeById(int tradeId) {
         logger.debug("Get trade with id : {}", tradeId);
@@ -34,6 +45,12 @@ public class TradeServiceImpl implements TradeService {
         );
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * <br>Before deleting, the method save the Trade ID in a variable. After deleted the Trade, the method
+     * search if a Trade with this ID exist. If Trade is present, a private exception is throw.
+     */
     @Override
     public void deleteTrade(Trade trade) {
         int id = trade.getTradeId();
@@ -46,6 +63,9 @@ public class TradeServiceImpl implements TradeService {
             throw new DataNotDeletedException("Trade with id " + id + " has not been deleted");
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void addTrade(Trade trade) {
         logger.debug("Add new trade : {}", trade.getTradeId());
@@ -53,6 +73,9 @@ public class TradeServiceImpl implements TradeService {
         tradeRepository.save(trade);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void updateTrade(int existingTradeId, Trade trade) {
         logger.debug("Update trade with id {}", existingTradeId);

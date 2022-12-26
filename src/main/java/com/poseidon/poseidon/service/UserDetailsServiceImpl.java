@@ -4,7 +4,6 @@ import com.poseidon.poseidon.domain.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -12,9 +11,11 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
 
+/**
+ * Class to search login user in database
+ */
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
     private static final Logger logger = LogManager.getLogger(UserDetailsServiceImpl.class);
@@ -22,6 +23,14 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Autowired
     private UserService userService;
 
+    /**
+     * Method which search if user exist in database. If it's true, the username, password and authority
+     * is put in an object use by Spring Security.
+     *
+     * @param username String Username to search
+     * @return User's connect information in an object
+     * @throws UsernameNotFoundException
+     */
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         logger.debug("Login with username {}", username);

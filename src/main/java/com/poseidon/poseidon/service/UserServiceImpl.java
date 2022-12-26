@@ -7,6 +7,9 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+/**
+ * Class to interact with User table data
+ */
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -15,6 +18,9 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserRepository userRepository;
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public User getUserByUsername(String username) {
         logger.debug("Get User with username : {}", username);

@@ -6,7 +6,9 @@ import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.time.LocalDate;
 
-
+/**
+ * Class use to connect data of table curvepoint into an object
+ */
 @Entity
 @DynamicUpdate
 @Table(name = "curvepoint")
