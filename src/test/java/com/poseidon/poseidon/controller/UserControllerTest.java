@@ -117,7 +117,7 @@ public class UserControllerTest {
         User user = new User();
         user.setUsername("newuser");
         user.setFullname("New User");
-        user.setPassword("MyUs3rP@sswOrd01");
+        user.setPassword("MyUs3rP@sswOrd01!");
         user.setRole("ADMIN");
 
         mvc.perform(post("/user/validate")
