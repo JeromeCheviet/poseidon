@@ -1,7 +1,7 @@
 package com.poseidon.poseidon.controllers;
 
 import com.poseidon.poseidon.domain.User;
-import com.poseidon.poseidon.repositories.UserRepository;
+import com.poseidon.poseidon.service.UserService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,7 @@ public class SignupController {
     private static final Logger logger = LogManager.getLogger(SignupController.class);
 
     @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
 
     /**
      * Method to laoding signup form
@@ -57,7 +57,7 @@ public class SignupController {
         user.setPassword(encoder.encode(user.getPassword()));
         user.setRole("USER");
 
-        userRepository.save(user);
+        userService.addUser(user);
         logger.info("User {} has been added", user.getUsername());
 
         return "redirect:/bidList/list";
