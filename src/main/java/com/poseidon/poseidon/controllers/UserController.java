@@ -1,8 +1,7 @@
 package com.poseidon.poseidon.controllers;
 
 import com.poseidon.poseidon.domain.User;
-import com.poseidon.poseidon.exception.DataNotFoundException;
-import com.poseidon.poseidon.repositories.UserRepository;
+import com.poseidon.poseidon.service.UserService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +23,9 @@ import javax.validation.Valid;
 @Controller
 public class UserController {
     private final static Logger logger = LogManager.getLogger(UserController.class);
+
     @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
 
     /**
      * Method to loading the main page of User operations.
@@ -36,18 +36,20 @@ public class UserController {
     @RequestMapping("/user/list")
     public String home(Model model) {
         logger.debug("Access /user/list page");
-        model.addAttribute("users", userRepository.findAll());
+        Iterable<User> users = userService.getUserList();
+
+        model.addAttribute("users", users);
         return "user/list";
     }
 
     /**
      * Method to loading adding User form.
      *
-     * @param bid Object which contain an empty user.
+     * @param user Object which contain an empty user.
      * @return String the URI to load
      */
     @GetMapping("/user/add")
-    public String addUser(User bid) {
+    public String addUser(User user) {
         logger.debug("Access /user/add page");
         return "user/add";
     }
@@ -64,14 +66,19 @@ public class UserController {
      */
     @PostMapping("/user/validate")
     public String validate(@Valid User user, BindingResult result, Model model) {
-        logger.debug("Post validate user");
+        logger.debug("Post validate user form to add new user");
         if (!result.hasErrors()) {
             BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
             user.setPassword(encoder.encode(user.getPassword()));
-            userRepository.save(user);
-            model.addAttribute("users", userRepository.findAll());
+
+            userService.addUser(user);
+            logger.info("New user added");
+
+            model.addAttribute("users", userService.getUserList());
+
             return "redirect:/user/list";
         }
+        logger.info("Add form not valid");
         return "user/add";
     }
 
@@ -85,10 +92,17 @@ public class UserController {
     @GetMapping("/user/update/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
         logger.debug("Access /user/update/{} page", id);
-        User user = userRepository.findById(id).orElseThrow(() -> new DataNotFoundException("Invalid user Id:" + id));
-        user.setPassword("");
-        model.addAttribute("user", user);
-        return "user/update";
+
+        User user = userService.getUserById(id);
+
+        if (user.getId() == id) {
+            user.setPassword("");
+            model.addAttribute("user", user);
+            return "user/update";
+        }
+
+        model.addAttribute("users", userService.getUserList());
+        return "user/list";
     }
 
     /**
@@ -108,14 +122,18 @@ public class UserController {
                              BindingResult result, Model model) {
         logger.debug("Post a valid form to update an existing user");
         if (result.hasErrors()) {
+            logger.info("Update form not valid");
             return "user/update";
         }
 
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         user.setPassword(encoder.encode(user.getPassword()));
         user.setId(id);
-        userRepository.save(user);
-        model.addAttribute("users", userRepository.findAll());
+
+        userService.updateUser(id, user);
+        logger.info("User with id {} has been updated", id);
+        model.addAttribute("users", userService.getUserList());
+
         return "redirect:/user/list";
     }
 
@@ -131,9 +149,15 @@ public class UserController {
     @GetMapping("/user/delete/{id}")
     public String deleteUser(@PathVariable("id") Integer id, Model model) {
         logger.debug("Access /user/delete/{} page", id);
-        User user = userRepository.findById(id).orElseThrow(() -> new DataNotFoundException("Invalid user Id:" + id));
-        userRepository.delete(user);
-        model.addAttribute("users", userRepository.findAll());
+
+        User user = userService.getUserById(id);
+        if (user.getId() == id) {
+            userService.deleteUser(user);
+            logger.info("User with id {} has been deleted.", id);
+        }
+
+        model.addAttribute("users", userService.getUserList());
+
         return "redirect:/user/list";
     }
 }
