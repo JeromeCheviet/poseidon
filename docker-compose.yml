@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+
+  db:
+    image: mysql:8.0.30
+    container_name: poseidon_db
+    environment:
+      MYSQL_ROOT_PASSWORD: rootroot
+      MYSQL_DATABASE: poseidon
+      MYSQL_USER: poseidon
+      MYSQL_PASSWORD: P0s31d0n
+    ports:
+      - 3306:3306
+    volumes:
+      - dbdata_poseidon:/var/lib/mysql
+
+volumes:
+  dbdata_poseidon:

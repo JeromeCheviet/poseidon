@@ -1,0 +1,87 @@
+variables:
+  MAVEN_OPTS: "-Dmaven.repo.local=$CI_PROJECT_DIR/.m2/repository -Dstyle.color=always -XX:+TieredCompilation -XX:TieredStopAtLevel=1 -Djansi.force=true"
+  SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"
+  MYSQL_DATABASE: "poseidon_test"
+  MYSQL_ROOT_PASSWORD: "rootroot"
+  MYSQL_USER: "poseidon"
+  MYSQL_PASSWORD: "P0s31d0n"
+  MYSQL_HOST: "mysql"
+
+cache:
+  paths:
+    - .m2
+    - .sonar/cache
+
+stages:
+  - test
+  - build
+  - deploy
+
+.ignore:
+  except:
+    changes:
+      #- ".gitlab-ci.yml"
+      - ".gitignore"
+      - "docker-compose.yml"
+      - "*.md"
+      - "doc/*"
+      - "*.css"
+      - "*.html"
+
+Test-code:
+  stage: test
+  image: maven:3.8.4-openjdk-11-slim
+  services:
+    - mysql:8.0.30
+  extends: .ignore
+  before_script:
+    - sed -i 's/127.0.0.1/mysql/' src/test/resources/application.properties
+  script:
+    - mvn ${MVN_OPTS} verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=JeromeCheviet_poseidon -Dsonar.organization=jeromecheviet -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_TOKEN -Dsonar.home=${SONAR_USER_HOME}
+    - awk -F"," '{ lines += $8 + $9; covered += $9 } END { print covered, "/", lines, "lines covered"; print 100*covered/lines, "% covered" }' target/site/jacoco/jacoco.csv || echo "0.0 % covered"
+  coverage: '/\d+.*\d+ \% covered/'
+  tags:
+    - docker
+
+Build-JAR:
+  stage: build
+  image: maven:3.8.4-openjdk-11-slim
+  dependencies :
+    - Test-code
+  script:
+    - mvn ${MVN_OPTS} -Drevision=x.y.z-SUFFIX -DskipTests -B clean install
+  artifacts:
+    paths:
+      - target/*.jar
+    expire_in: 7 days
+  rules:
+    - if: $CI_COMMIT_REF_NAME == "dev" && $CI_PIPELINE_SOURCE == "push" || $CI_COMMIT_REF_NAME == "main" && $CI_PIPELINE_SOURCE == "push" || $CI_COMMIT_MESSAGE =~ /See merge request/
+    #- if: $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME == "dev" || $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME == "main"
+  tags:
+    - docker
+
+Prepare-server:
+  stage: deploy
+  when: manual
+  extends: .ignore
+  script:
+    - echo "Préparer le serveur cible (BDD, Java)"
+  only:
+    - main
+  tags:
+    - docker
+    
+Deploy-app:
+  stage: deploy
+  when: manual
+  extends: .ignore
+  dependencies:
+    - Build-JAR
+    - Prepare-server
+  script:
+    - echo "Lancer les playbooks Ansible pour déployer l'application"
+    - echo "Voir si il n'est pas plus pertinent de créer un projet dédié Ansible et transformer ce job en Trigger !"
+  only:
+    - main
+  tags:
+    - docker
